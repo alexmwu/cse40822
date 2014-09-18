@@ -1,0 +1,7 @@
+universe=vanilla
+executable=condorscript.sh
+output=ass0.output.$(PROCESS)
+should_transfer_files=yes
+when_to_transfer_output=on_exit
+log=userlog.log
+queue 1000
