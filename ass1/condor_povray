@@ -1,0 +1,53 @@
+#!/usr/bin/python
+
+import os
+import sys
+import re
+import subprocess
+from distutils.spawn import find_executable
+
+if len(sys.argv)!=4:#quit if not 4 arguments
+    print "Usage: "+sys.argv[0]+" input_pov_file output_video_file number_frames"
+    sys.exit()
+
+if not os.path.isfile(sys.argv[1]):
+    print(sys.argv[1]+' is not a file.\n')
+    sys.exit()
+
+currentdir=os.getcwd()
+povpath=find_executable('povray')#path for povray bin
+povfile=os.path.abspath(sys.argv[1])#path for pov input file
+incfile=os.path.abspath('WRC_RubiksCube.inc')
+filename='condor_povray.submit'
+framerate=10#frames
+logfilename='povray.log'
+framename='povrayframe'
+width=320
+height=400
+
+file=open(filename,'w')#condor_submit file
+     
+file.write('universe=vanilla\n')
+file.write('executable='+povpath+'\n') #requires povray in PATH
+file.write('input=/dev/null\n')
+file.write('arguments = +I'+sys.argv[1]+' +O'+framename+'$(PROCESS).png'+' +K.$(PROCESS) -H'+str(height)+' -W'+str(width)+'\n')
+file.write('transfer_input_files='+povfile+','+incfile+'\n')
+file.write('should_transfer_files=yes\n')
+file.write('when_to_transfer_output=on_exit\n')
+file.write('log='+logfilename+'\n')
+file.write('error=povray.error\n')
+file.write('queue '+sys.argv[3]+'\n')
+file.close()
+
+while os.system('condor_submit '+filename)!=0:
+    continue
+os.system('condor_wait '+logfilename)
+
+for f in os.listdir("."):#format filename with 3 digits for frame number
+    if f.startswith(framename):
+        s=re.findall(r'\d+',f)
+        s="{0:0>3}".format(int(s[0]))
+        os.rename(f,framename+s+'.png')
+ 
+os.system('ffmpeg -r '+str(framerate)+' -i '+framename+'%03d.png -r ntsc '+sys.argv[2])
+os.system('rm '+framename+'*.png')

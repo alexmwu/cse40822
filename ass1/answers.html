@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>Assignment 1</title>
+  </head>
+
+  <body>
+	<h1>Alex Wu</h1>
+	<h1>Cloud Computing Assignment 1</h1>
+    <!--h2>1.</h2-->
+	<!--h1>files</h1-->
+	<ul>
+		<li><a href="condor_povray">condor_povray</a></li>
+		<li><a href="rubiks.pov">rubiks.pov</a></li>
+		<li><a href="rubik320.log">rubik320.log</a></li>
+		<li><a href="rubik640.log">rubik640.log</a></li>
+		<li><a href="rubik1280.log">rubik1280.log</a></li>
+		<li><a href="rubik1920.log">rubik1920.log</a></li>
+		<li><a href="rubik320.mpg">rubik320.mpg</a></li>
+		<li><a href="rubik640.mpg">rubik640.mpg</a></li>
+		<li><a href="rubik1280.mpg">rubik1280.mpg</a></li>
+		<li><a href="rubik1920.mpg">rubik1920.mpg</a></li>
+
+	</ul>
+	<br><br>
+	<p>The 320x400 frame took 25.04 seconds. The 640x480 frame took 58.39 seconds. The 1280x720 frame took 2 minutes and 52.52 seconds. The 1920x1080 frame took 6 minutes and 27.88 seconds.<br>
+	 <ul><li> One minute of video (60 seconds) at 10 frames per second is 600 frames.</li>
+	   <li>The 320x400 frame would take 15024 seconds, or 250 minutes and 24 seconds.</li>
+	   <li>The 640x480 frame would take 35034 seconds, or 583 minutes and 54 seconds.</li>
+	   <li>The 1280x720 frame would take 103512 seconds, or 1725 minutes and 12 seconds which is 28 hours and 45 minutes.</li>
+	   <li>The 1920x1080 frame would take 232728 seconds, or 3878 minutes and 48 seconds which is 64 hours, 38 minutes, and 48 seconds.</li>
+
+	  </p>
+	<br><br>
+	<!--h2>2.</h2-->
+	<p>
+	  Almost all of the jobs were submitted very closely for each resolution. Most of the jobs also look a bit like a normal distribution in that there is a peak number of jobs running (usually close to the number submitted) and the running jobs graph generally increases and decreases smoothly.
+	  <ol>
+	    <li>The <a href="http://condorlog.cse.nd.edu/logs/12/d0/12d0847b5a9da7f29b84d6f74ee71751/">320x400 resolution video</a> submitted all the jobs at the same time, but there was a bit of a delay, after which the running jobs increased, peaked, and fell down again. The running jobs tapered into a tail, which showed on the completed jobs graph as well. The number of running jobs peaked at about 550 jobs running at the same time. The analyzer also mentions that there were 102 vacate events, which could mean that none of the machines wanted the job.
+	</li>
+	<li> The <a href="http://condorlog.cse.nd.edu/logs/28/64/286484ccf635565f4837ae09a3fda4d8/">640x480 resolution video</a> submitted most of the jobs at the same time, with a slight blip at the top. There was still a delay in getting the jobs to begin running, but not as large as the 320x400 delay. The running chart also fluctuated quite a bit as there were  many times in which the chart either went almost vertical or stayed horizontal. That is to say, the increase in running jobbs was not very stable. The decrease in running jobs, on the the other hand, was a bit more stable. It was still not very smooth, however. The running jobs and completed jobs also tapered off into a tail. The running jobs for this resolution peaked very close to 600 at about 580.
+	</li>
+	<li> The <a href="http://condorlog.cse.nd.edu/logs/5d/02/5d022e9b4c08136c38643f65671d9e04/">1280x720 resolution video</a>, like the others, submitted most of the jobs at the same time. The delay for this graph is a bit worse than that of the 640x480 resolution. The running jobs is relatively smooth, but there are some horizontal as well as vertical spots on the graph. The number of running jobs at the same time either reached 600 or it got very close. 
+	</li> 
+	<li>The <a href="http://condorlog.cse.nd.edu/logs/b2/1b/b21b09688a3dcbc351b17bb392d87559/">1920x1080 resolution video</a> also submitted all of the jobs at the same time. The number of jobs peaked at around 600. Additionally, the number of jobs was at or near the peak for a good amount. The graph for running jobs is very strange. There is very little delay and the number of running jobs increases very quickly in a short amount of time. Towards the end, the running activities decreased more smoothly than at the beginning. The graph, like the others, ends in a tail. There are 15 vacate events and they get listed in execute events.
+	</li>
+
+
+	    </ol>
+	  </p>
+  </body>
+
+</html>

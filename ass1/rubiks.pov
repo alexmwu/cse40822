@@ -54,29 +54,23 @@ plane
 object
 {
 WRC_RubiksRevenge("F'f' Rrd2R'r' U'u'Rr d2 U ld'l' U' ldl' R'r'Uu Ff")
-translate < -6.6/2, 0, -6.6/2 >
+translate <-6.6/6.6, 0, -6.6/6.6 >
 rotate y*45
-}
-
-
-object
-{
-WRC_RubiksRevenge("F'f' Rrd2R'r' U'u'Rr d2 U ld'l' U' ldl' R'r'Uu Ff")
-translate < -6.6/2, 0, -6.6/2 >
-rotate y*45
+translate < 6.6/6.6, 0, 6.6/6.6 >
 }
 
 object
 {
 WRC_RubiksRevenge("F'f' Rrd2R'r' U'u'Rr d2 U ld'l' U' ldl' R'r'Uu Ff")
-translate < -0, -6.6/2, -6.6/2 >
-translate < 2, 2, 2 >
-rotate y*90
+translate < -6.6/1.5, 0, 6.6/2 >
+rotate y*(45+clock*360)
+translate < 6.6/2, 0, -6.6/1.5 >
 }
 
 object
 {
 WRC_RubiksRevenge("F'f' Rrd2R'r' U'u'Rr d2 U ld'l' U' ldl' R'r'Uu Ff")
-translate < -6.6/3, -2, -2 >
-rotate y*(-45)
+translate < 6.6/2, 0, -6.6/1.5>
+rotate y*(-45+clock*360)
+translate < -6.6/1.5, 0, 6.6/2>
 }
