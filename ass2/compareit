@@ -1,0 +1,72 @@
+#!/usr/bin/env python
+#should be python v 2.6.6 (or greater)
+#Alex Wu
+#CSE40822 Assignment 2
+from work_queue import *
+
+import os
+import sys
+
+exe='./swaligntool'
+pythonversion='python2.6'
+
+def parseFile(inputfile):
+#Parse Input DNA Sequence File
+    sequences={}#make empty dict
+    with open(inputfile,'r') as f: #read in dna sequence file for reading
+        while 1:#loop until EOF
+            line=f.readline().strip()#read in a line and strip it
+            if not line: break
+            idline=line.replace('>','',1)#remove the >
+            line=f.readline().strip()
+            if not line: break
+            sequences[idline]=line#add key value pair to dict
+    return sequences
+
+def createTask(in1,in2):
+#Create a Work Queue task
+    command="%s %s %s %s" % (pythonversion,exe,in1,in2)
+    t=Task(command)
+    t.specify_file(exe,"swaligntool",WORK_QUEUE_INPUT,cache=True)
+    t.specify_buffer(in1,in1,WORK_QUEUE_INPUT)
+    t.specify_buffer(in2,in2,WORK_QUEUE_INPUT)
+#    outfile='%s_%s' % (k1,k2)
+#    t.specify_file(outfile,outfile,WORK_QUEUE_OUTPUT,cache=False)
+    return t
+
+def main():
+#Main
+    if(len(sys.argv)<2):
+        print 'Usage: '+sys.argv[0]+' sequence_file'
+        sys.exit(1)
+    port = 0 #use an open port
+    sequences=parseFile(sys.argv[1])
+    if(len(sequences)<2):#only comparing distinct sequences
+        print 'There need to be 2 or more sequences'
+        sys.exit(1)
+ #   print sequences
+    q=WorkQueue(port)
+#    print 'Listening on port %d' % q.port
+    for k1 in sequences:
+        for k2 in sequences:
+            if(k1==k2): continue
+            t=createTask(sequences[k1],sequences[k2])
+            taskid=q.submit(t)
+            print 'Submitted task (id #%d): %s' % (taskid,t.command)
+    
+    print 'Waiting for tasks to complete...'
+    print 'Listening on port %d' % q.port
+    while not q.empty():
+        t=q.wait()
+        if t:
+#            print 'Task (id #%d) complete: %s (return code %d)' % (t.id,t.command,t.return_status)
+            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
+            if t.return_status!=0:
+                print 'The task failed'
+            else:
+                print 'The task succeeded'
+    print 'All tasks complete!'
+    sys.exit(0)
+
+if __name__=='__main__':
+    main()
