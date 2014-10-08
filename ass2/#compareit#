@@ -7,16 +7,12 @@ from work_queue import *
 import os
 import sys
 import operator
-import time
 
 dir=os.getcwd()
 #print dir
-exe='swaligntool'
-exedir=dir+'/'+exe
-initpy='swalign/__init__.py'
-initpydir=dir+'/'+initpy
-initpyc='swalign/__init__.pyc'
-initpycdir=dir+'/'+initpyc
+exe=dir+ '/swaligntool'  
+initpy=dir+'/swalign/__init__.py'
+initpyc=dir+'/swalign/__init__.pyc'
 pythonversion='python2.6'
 topmatches=10#top 10 matches
 
@@ -40,9 +36,9 @@ def createTask(seqdict,k1,k2):
     command="%s %s %s %s" % (pythonversion,'./swaligntool',in1,in2)
     tag="%s-%s" % (k1,k2)
     t=Task(command)
-    t.specify_file(exedir,exe,WORK_QUEUE_INPUT,0,cache=True)
-    t.specify_file(initpydir,initpy,WORK_QUEUE_INPUT,0,cache=True)
-    t.specify_file(initpycdir,initpyc,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_file(exe,None,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_file(initpy,None,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_file(initpyc,None,WORK_QUEUE_INPUT,0,cache=True)
     t.specify_buffer(in1,str(len(in1)),WORK_QUEUE_INPUT)
     t.specify_buffer(in2,str(len(in2)),WORK_QUEUE_INPUT)
  #   t.specify_file('input1.txt','input1.txt',WORK_QUEUE_INPUT,cache=False)
@@ -64,7 +60,7 @@ def parseOutput(task):
 
 def main():
 #Main
-    print sys.version#which version of python
+#    print sys.version#which version of python
     if(len(sys.argv)<2):
         print 'Usage: '+sys.argv[0]+' sequence_file'
         sys.exit(1)
@@ -84,7 +80,6 @@ def main():
     alreadycompared={}#already compared keys: key1 concatenated with key2
     less=0#less computation as the cast to int and compare only needs to be done once
 
-    starttime=time.time()
     for k1 in sequences:
         for k2 in sequences:
 
@@ -117,7 +112,7 @@ def main():
         if t:
 #            print 'Task (id #%d) complete: %s (return code %d)' % (t.id,t.command,t.return_status)
 #            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
-#            print t.output
+            print t.output
             if t.return_status!=0:
                 print 'The task failed'
             else:
@@ -137,12 +132,8 @@ def main():
     length=len(topscores)
     for i in range(length):
         print str(i+1)+': sequence '+topscores[length-i-1][0]+' matches '+topscores[length-i-1][1]+' with a score of '+topscores[length-i-1][2]
-        
-    endtime=time.time()
-    elapsed=endtime-startime
-    print 'Time elapsed: '+str(elapsed)
-
     sys.exit(0)
+
 
 if __name__=='__main__':
     main()
