@@ -60,7 +60,7 @@ def parseOutput(task):
         if 'Score' in line:
             score=line.strip().split(': ',1)#how swaligntool formats it
             score=score[1]
-    return [seq1,seq2,score]#returns array of seq1 id seq2 id and score
+    return [seq1,seq2,int(score)]#returns array of seq1 id seq2 id and score
 
 def main():
 #Main
@@ -119,27 +119,30 @@ def main():
 #            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
 #            print t.output
             if t.return_status!=0:
-                print 'The task failed'
+                print 'The task '+str(t.tag)+' failed'
             else:
-                print 'The task succeeded'
-                output=parseOutput(t)
-                length=len(topscores)
-                if(length<topmatches):
-                    topscores.append(output)
-                else:
-                    min=0
-                    for i in range(length):
-                        if topscores[i][2]<topscores[min][2]: min=i
-                    if output[2]>topscores[min]: topscores[min]=output
+                print 'The task '+str(t.tag)+' succeeded'
+		topscores.append(parseOutput(t))
+#                output=parseOutput(t)
+#		print output
+#                length=len(topscores)
+#                if(length<topmatches):
+#                    topscores.append(output)
+#                else:
+#                    min=0
+#                    for i in range(length):
+#                        if topscores[i][2]<topscores[min][2]: min=i
+#                    if output[2]>topscores[min]: topscores[min]=output
+
     print 'All tasks complete!'
     topscores=sorted(topscores,key=operator.itemgetter(2))
     print 'Top '+str(topmatches)+' Matches'
     length=len(topscores)
-    for i in range(length):
-        print str(i+1)+': sequence '+topscores[length-i-1][0]+' matches '+topscores[length-i-1][1]+' with a score of '+topscores[length-i-1][2]
+    for i in range(topmatches):
+        print str(i+1)+': sequence '+topscores[length-i-1][0]+' matches '+topscores[length-i-1][1]+' with a score of '+str(topscores[length-i-1][2])
         
     endtime=time.time()
-    elapsed=endtime-startime
+    elapsed=endtime-starttime
     print 'Time elapsed: '+str(elapsed)
 
     sys.exit(0)
