@@ -1,0 +1,9 @@
+#!/bin/bash
+
+#simple script to test swalign time
+
+if [[ ! $# == 1 ]]; then
+	echo "Usage: $0 filename"
+	exit
+fi
+time ./swaligntool $1 $1
