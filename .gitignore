@@ -1,5 +1,6 @@
 *.png
 *.mpg
 *.tar.gz
+.*.swp
 *~
 \#*
