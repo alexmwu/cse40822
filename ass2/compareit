@@ -11,6 +11,7 @@ dir=os.getcwd()
 #print dir
 exe=dir+'/swaligntool'
 pythonversion='python2.6'
+topmatches=10#top 10 matches
 
 def parseFile(inputfile):
 #Parse Input DNA Sequence File
@@ -60,15 +61,37 @@ def main():
         print 'Instantiation of Work Queue failed'
         sys.exit(1)
 #    print 'Listening on port %d' % q.port
+
+    alreadycompared={}#already compared keys: key1 concatenated with key2
+    less=0#less computation as the cast to int and compare only needs to be done once
+
     for k1 in sequences:
         for k2 in sequences:
+
+            #this if else structure checks if the keys have already been compared, saving computation time (or if the keys are the same)
             if(k1==k2): continue
+            elif(k1<k2):
+                less=1
+                if(k1+k2 in alreadycompared): continue
+            else:
+                less=0
+                if(k2+k1 in alreadycompared): continue
+
             t=createTask(sequences,k1,k2)
             taskid=q.submit(t)
+
+            #assumes unique keys in sequences (which they should be)
+            if less==1:
+                alreadycompared[k1+k2]=1#what the value is doesn't matter since the above if else structure only checks if the key exists
+            else:
+                alreadycompared[k2+k1]=1#ditto the comment above
             print 'Submitted task (id #%d): %s' % (taskid,t.command)
     
     print 'Waiting for tasks to complete...'
     print 'Listening on port %d' % q.port
+
+    
+
     while not q.empty():
         t=q.wait()
         if t:
