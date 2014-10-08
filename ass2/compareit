@@ -6,10 +6,13 @@ from work_queue import *
 
 import os
 import sys
+import operator
 
 dir=os.getcwd()
 #print dir
 exe=dir+'/swaligntool'
+initpy=dir+'/swalign/__init__.py'
+initpyc=dir+'/swalign/__init__.pyc'
 pythonversion='python2.6'
 topmatches=10#top 10 matches
 
@@ -34,6 +37,8 @@ def createTask(seqdict,k1,k2):
     tag="%s-%s" % (k1,k2)
     t=Task(command)
     t.specify_file(exe,None,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_file(initpy,None,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_file(initpyc,None,WORK_QUEUE_INPUT,0,cache=True)
     t.specify_buffer(in1,str(len(in1)),WORK_QUEUE_INPUT)
     t.specify_buffer(in2,str(len(in2)),WORK_QUEUE_INPUT)
  #   t.specify_file('input1.txt','input1.txt',WORK_QUEUE_INPUT,cache=False)
@@ -98,7 +103,7 @@ def main():
 #            print 'Submitted task (id #%d): %s' % (taskid,t.command)
     
     print 'Waiting for tasks to complete...'
-#    print 'Listening on port %d' % q.port
+    print 'Listening on port %d' % q.port
 
     
     topscores=[]#array of arrays of outputs; will only stores the top however many scores (10 in this case)
@@ -107,14 +112,28 @@ def main():
         if t:
 #            print 'Task (id #%d) complete: %s (return code %d)' % (t.id,t.command,t.return_status)
 #            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
+            print t.output
             if t.return_status!=0:
                 print 'The task failed'
             else:
                 print 'The task succeeded'
                 output=parseOutput(t)
-                
+                length=len(topscores)
+                if(length<topmatches):
+                    topscores.append(output)
+                else:
+                    min=0
+                    for i in range(length):
+                        if topscores[i][2]<topscores[min][2]: min=i
+                    if output[2]>topscores[min]: topscores[min]=output
     print 'All tasks complete!'
+    topscores=sorted(topscores,key=operator.itemgetter(2))
+    print 'Top '+str(topmatches)+' Matches'
+    length=len(topscores)
+    for i in range(length):
+        print str(i+1)+': sequence '+topscores[length-i-1][0]+' matches '+topscores[length-i-1][1]+' with a score of '+topscores[length-i-1][2]
     sys.exit(0)
+
 
 if __name__=='__main__':
     main()
