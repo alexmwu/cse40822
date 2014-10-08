@@ -43,6 +43,16 @@ def createTask(seqdict,k1,k2):
 #    t.specify_file(outfile,None,WORK_QUEUE_OUTPUT,cache=False)
     return t
 
+def parseOutput(task):
+    tag=task.tag.split('-',1)
+    seq1=tag[0]
+    seq2=tag[1]
+    for line in task.output.split('\n'):
+        if 'Score' in line:
+            score=line.strip().split(': ',1)#how swaligntool formats it
+            score=score[1]
+    return [seq1,seq2,score]#returns array of seq1 id seq2 id and score
+
 def main():
 #Main
 #    print sys.version#which version of python
@@ -85,23 +95,24 @@ def main():
                 alreadycompared[k1+k2]=1#what the value is doesn't matter since the above if else structure only checks if the key exists
             else:
                 alreadycompared[k2+k1]=1#ditto the comment above
-            print 'Submitted task (id #%d): %s' % (taskid,t.command)
+#            print 'Submitted task (id #%d): %s' % (taskid,t.command)
     
     print 'Waiting for tasks to complete...'
-    print 'Listening on port %d' % q.port
+#    print 'Listening on port %d' % q.port
 
     
-
+    topscores=[]#array of arrays of outputs; will only stores the top however many scores (10 in this case)
     while not q.empty():
         t=q.wait()
         if t:
 #            print 'Task (id #%d) complete: %s (return code %d)' % (t.id,t.command,t.return_status)
-            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
-            print t.output
+#            print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
             if t.return_status!=0:
                 print 'The task failed'
             else:
                 print 'The task succeeded'
+                output=parseOutput(t)
+                
     print 'All tasks complete!'
     sys.exit(0)
 
