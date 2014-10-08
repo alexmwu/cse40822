@@ -7,7 +7,9 @@ from work_queue import *
 import os
 import sys
 
-exe='./swaligntool'
+dir=os.getcwd()
+#print dir
+exe=dir+'/swaligntool'
 pythonversion='python2.6'
 
 def parseFile(inputfile):
@@ -23,19 +25,26 @@ def parseFile(inputfile):
             sequences[idline]=line#add key value pair to dict
     return sequences
 
-def createTask(in1,in2):
+def createTask(seqdict,k1,k2):
 #Create a Work Queue task
+    in1=seqdict[k1]
+    in2=seqdict[k2]
     command="%s %s %s %s" % (pythonversion,exe,in1,in2)
+    tag="%s-%s" % (k1,k2)
     t=Task(command)
-    t.specify_file(exe,"swaligntool",WORK_QUEUE_INPUT,cache=True)
-    t.specify_buffer(in1,in1,WORK_QUEUE_INPUT)
-    t.specify_buffer(in2,in2,WORK_QUEUE_INPUT)
-#    outfile='%s_%s' % (k1,k2)
-#    t.specify_file(outfile,outfile,WORK_QUEUE_OUTPUT,cache=False)
+    t.specify_file(exe,None,WORK_QUEUE_INPUT,0,cache=True)
+    t.specify_buffer(in1,str(len(in1)),WORK_QUEUE_INPUT)
+    t.specify_buffer(in2,str(len(in2)),WORK_QUEUE_INPUT)
+ #   t.specify_file('input1.txt','input1.txt',WORK_QUEUE_INPUT,cache=False)
+ #   t.specify_file('input2.txt','input2.txt',WORK_QUEUE_INPUT,cache=False)
+    t.specify_tag(tag)
+#    outfile='%s-%s.txt' % (k1,k2)
+#    t.specify_file(outfile,None,WORK_QUEUE_OUTPUT,cache=False)
     return t
 
 def main():
 #Main
+#    print sys.version#which version of python
     if(len(sys.argv)<2):
         print 'Usage: '+sys.argv[0]+' sequence_file'
         sys.exit(1)
@@ -45,12 +54,16 @@ def main():
         print 'There need to be 2 or more sequences'
         sys.exit(1)
  #   print sequences
-    q=WorkQueue(port)
+    try:
+        q=WorkQueue(port)
+    except:
+        print 'Instantiation of Work Queue failed'
+        sys.exit(1)
 #    print 'Listening on port %d' % q.port
     for k1 in sequences:
         for k2 in sequences:
             if(k1==k2): continue
-            t=createTask(sequences[k1],sequences[k2])
+            t=createTask(sequences,k1,k2)
             taskid=q.submit(t)
             print 'Submitted task (id #%d): %s' % (taskid,t.command)
     
@@ -61,6 +74,7 @@ def main():
         if t:
 #            print 'Task (id #%d) complete: %s (return code %d)' % (t.id,t.command,t.return_status)
             print 'Task (id #%d) complete: return code %d' % (t.id,t.return_status)
+            print t.output
             if t.return_status!=0:
                 print 'The task failed'
             else:
