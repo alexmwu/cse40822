@@ -1,0 +1,6 @@
+#!/bin/bash
+#Alex Wu
+#CSE40822
+#inlinks
+
+hadoop jar $HADOOP_HOME/mapred/contrib/streaming/hadoop-*-streaming.jar	-input /users/edu_html/* -output /users/awu3/inlinks -mapper InLinksMap.py -file scripts/InLinksMap.py -reducer InLinksReduce.py -file scripts/InLinksReduce.py

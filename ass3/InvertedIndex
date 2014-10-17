@@ -1,0 +1,8 @@
+#!/bin/bash
+#Alex Wu
+#CSE40822
+#inverted index
+
+
+hadoop jar $HADOOP_HOME/mapred/contrib/streaming/hadoop-*-streaming.jar -input /users/edu_html/* -output /users/awu3/invertedindex -mapper InvertedIndexMap.py -file scripts/InvertedIndexMap.py -reducer InvertedIndexReduce.py -file scripts/InvertedIndexReduce.py
+

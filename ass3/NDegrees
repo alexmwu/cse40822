@@ -1,0 +1,6 @@
+#!/bin/bash
+#Alex Wu
+#CSE40822
+#nd-degrees
+
+hadoop jar $HADOOP_HOME/mapred/contrib/streaming/hadoop-*-streaming.jar	-input /users/edu_html/* -output /users/awu3/ndegrees -mapper NDegreesMap.py -file scripts/NDegreesMap.py -reducer NDegreesReduce.py -file scripts/NDegreesReduce.py

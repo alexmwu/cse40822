@@ -1,0 +1,6 @@
+#!/bin/bash
+#Alex Wu
+#CSE40822
+#outlinks
+
+hadoop jar $HADOOP_HOME/mapred/contrib/streaming/hadoop-*-streaming.jar	-input /users/edu_html/* -output /users/awu3/outlinks -mapper OutLinksMap.py -file scripts/OutLinksMap.py -reducer OutLinksReduce.py -file scripts/OutLinksReduce.py

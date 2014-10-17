@@ -1,0 +1,16 @@
+Alex Wu
+CSE 40822
+
+Everything is output to /users/awu3/[lower case of problem name] via the bash scripts for each problem.
+
+For the word count problem, run the bash script called WordCount, which gives the Hadoop command to run the streaming version with scripts called WordCountMap.py and WordCountReduce.py in the scripts directory.
+
+For the inverted index problem, run the script called InvertedIndex, which runs MapReduce on the python scripts corresponding to InvertedIndex in the scripts directory.
+
+For the bigrams problem, run the bash script called Bigrams, which executes the Hadoop streaming on the Bigrams python scripts in the scripts directory.
+
+For the out-links problem, run the bash script called OutLinks, which runs the OutLinks python scripts in the scripts directory over Hadoop.
+
+For the in-links problem, run the bash script called InLinks, which runs the InLinks python scripts in the scripts directory.
+
+For the n-degrees problem, run the bash script called NDegrees, which runs the corresponding python mapreduce scripts on Hadoop. The script counts the outputs of Hadoop and if it does not change between two cycles of MapReduce, we stop.

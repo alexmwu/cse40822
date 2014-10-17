@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+
+import sys
+import re
+
+def parseHTML(inputHTML):
+	hosts={}
+	with open(inputHTML,'r') as file:
+		for line in file:
+			#find the a href tags
+			match=re.search("<.*a\ *href\ *=\ *.*>.*</\ *a\ *>",line)	#find all instances of a href tags
+			if match!=None:	#if match
+				line=match.group(0)
+				line=line.replace("'",'"')
+				line=line.split('"')
+				for substr in line:
+					if "http://" in substr:
+						substr=substr.strip("http://")
+						substr=substr.split('/',1)[0]
+						substr="http_"+substr
+						print substr
+			else:
+				continue
+#	return hosts 
+
+def main():
+	if len(sys.argv)!=2:
+		print "Usage: "+sys.argv[0]+" html_file"
+		sys.exit()
+	parseHTML(sys.argv[1])
+	#print parsed
+
+if __name__=='__main__':
+	main()

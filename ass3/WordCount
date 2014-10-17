@@ -1,0 +1,9 @@
+#!/bin/bash
+#Alex Wu
+#CSE 40822
+#bash command for running Hadoop streaming on the following map and reduce functions
+
+
+
+hadoop jar $HADOOP_HOME/mapred/contrib/streaming/hadoop-*-streaming.jar -input /users/edu_html/* -output /users/awu3/wordcount -mapper WordCountMap.py -file scripts/WordCountMap.py -reducer WordCountReduce.py -file scripts/WordCountReduce.py
+
