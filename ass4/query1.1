@@ -1,0 +1,14 @@
+--query.1.1 / output.1.1 - List the emp_no, from_date and to_date of 
+--each manager in the research department.
+
+
+dept = LOAD 's3://nd-cse40822/employee/departments.csv' USING PigStorage(',') as (dept_no: chararray, dept_name: chararray);
+manager= LOAD 's3://nd-cse40822/employee/dept_manager.csv' USING PigStorage(',') as (emp_no: chararray, from_date: chararray, to_date: chararray);
+research = FILTER dept BY dept_name == 'Research';
+--research_managers = JOIN dept BY dept_no
+--result = FOREACH research GENERATE *;
+
+--result = FOREACH dept GENERATE dept_name;
+result = FOREACH manager GENERATE *;
+--STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.1';
+DUMP result;
