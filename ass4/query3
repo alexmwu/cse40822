@@ -1,0 +1,20 @@
+--query.3 / output.3 - Determine the ten pages with the greatest number of 
+--outlinks. Output the titles of those ten pages and the number of outlinks, 
+--sorted from highest to lowest.
+
+titles = load 's3://nd-cse40822/wikilinks/links-titles.txt' USING PigStorage(':') as (page_id: chararray,page_name: chararray);
+
+links = load 's3://nd-cse40822/wikilinks/links-simple-sorted.txt' USING PigStorage(':') as (page_id, out: chararray);
+
+split_links = foreach links generate page_id,SIZE(STRSPLIT(out,' ')) as outlinks;
+
+ordered = join split_links by page_id, titles by page_id;
+
+top_ordered_names = foreach ordered generate titles::page_name,split_links::outlinks;
+
+top_ordered_sorted = order top_ordered_names by outlinks desc;
+
+
+result = limit top_ordered_sorted 10;
+
+store result into 's3://awu3-cse40822-a4/output.3';

@@ -12,4 +12,4 @@ research_mgr = JOIN research BY dept_no, manager BY dept_no;
 
 result = FOREACH research_mgr GENERATE manager::emp_no, manager::from_date, manager::to_date;
 
-STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.1';
+STORE result INTO 's3://awu3-cse40822-a4/output.1.1';

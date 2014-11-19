@@ -1,0 +1,11 @@
+--query.2 / output.2 - Compute for each bigram, the average number of
+--appearances of that bigram across all years.
+
+bigrams = load 's3://nd-cse40822/bigram/googlebooks-2gram.csv' USING PigStorage('\t') as (ngram: chararray, year: chararray, match_count: float, page_count: float, volume_count: float);
+
+grped_bigrams = group bigrams by $0;
+
+final_grped = foreach grped_bigrams generate group,SUM(bigrams.match_count)/SUM(bigrams.volume_count);
+
+
+store final_grped into 's3://awu3-cse40822-a4/output.2';

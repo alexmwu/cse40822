@@ -16,4 +16,4 @@ res_mgr_name = JOIN research_mgr BY emp_no, employees BY emp_no;
 
 result = FOREACH res_mgr_name GENERATE employees::first_name,employees::last_name;
 
-STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.2';
+STORE result INTO 's3://awu3-cse40822-a4/output.1.2';

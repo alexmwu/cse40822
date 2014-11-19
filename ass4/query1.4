@@ -8,14 +8,12 @@ employee_dept = join dept by dept_no, employees by dept_no;
 
 grouped_emp_dept = group employee_dept by employees::dept_no;
 
-counted = foreach grouped_emp_dept generate flatten(group), COUNT(employee_dept) as cnt;
+counted = foreach grouped_emp_dept generate group, COUNT(employee_dept) as cnt;
 
-dump counted;
+count_gt = filter counted by cnt>50000;
 
-result = filter counted by cnt>50000;
---research = filter dept by dept_name == 'Research';
+dept_names = join count_gt by group, dept by dept_no;
 
---research_mgr = join research by dept_no, manager by dept_no;
+result = foreach dept_names generate dept::dept_name, cnt;
 
-dump result;
---store result into 's3://awu3-cse40822-a4/prob1/output.1.4';
+store result into 's3://awu3-cse40822-a4/output.1.4';
