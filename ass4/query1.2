@@ -3,12 +3,17 @@
 
 
 dept = LOAD 's3://nd-cse40822/employee/departments.csv' USING PigStorage(',') as (dept_no: chararray, dept_name: chararray);
-manager= LOAD 's3://nd-cse40822/employee/dept_manager.csv' USING PigStorage(',') as (emp_no: chararray, from_date: chararray, to_date: chararray);
-research = FILTER dept BY dept_name == 'Research';
---research_managers = JOIN dept BY dept_no
---result = FOREACH research GENERATE *;
 
---result = FOREACH dept GENERATE dept_name;
-result = FOREACH manager GENERATE *;
---STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.1';
-DUMP result;
+manager = LOAD 's3://nd-cse40822/employee/dept_manager.csv' USING PigStorage(',') as (dept_no: chararray, emp_no: chararray, from_date: chararray, to_date: chararray);
+
+employees = LOAD 's3://nd-cse40822/employee/employees.csv' USING PigStorage(',') as (emp_no: chararray, birth_date: chararray, first_name: chararray, last_name: chararray, gender: chararray, hire_date: chararray);
+
+research = FILTER dept BY dept_name == 'Research';
+
+research_mgr = JOIN research BY dept_no, manager BY dept_no;
+
+res_mgr_name = JOIN research_mgr BY emp_no, employees BY emp_no;
+
+result = FOREACH res_mgr_name GENERATE employees::first_name,employees::last_name;
+
+STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.2';

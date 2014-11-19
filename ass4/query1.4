@@ -1,0 +1,21 @@
+--query.1.4 / output.1.4 - List the dept_name and number of employees for all departments that have more than 50000 employees.
+
+dept = load 's3://nd-cse40822/employee/departments.csv' USING PigStorage(',') as (dept_no: chararray, dept_name: chararray);
+
+employees = load 's3://nd-cse40822/employee/dept_emp.csv' USING PigStorage(',') as (emp_no: chararray, dept_no: chararray, from_date: chararray, to_date: chararray);
+
+employee_dept = join dept by dept_no, employees by dept_no;
+
+grouped_emp_dept = group employee_dept by employees::dept_no;
+
+counted = foreach grouped_emp_dept generate flatten(group), COUNT(employee_dept) as cnt;
+
+dump counted;
+
+result = filter counted by cnt>50000;
+--research = filter dept by dept_name == 'Research';
+
+--research_mgr = join research by dept_no, manager by dept_no;
+
+dump result;
+--store result into 's3://awu3-cse40822-a4/prob1/output.1.4';

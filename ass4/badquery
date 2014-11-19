@@ -1,0 +1,20 @@
+--query.1.1 / output.1.1 - List the emp_no, from_date and to_date of
+--each manager in the research department.
+
+
+dept = LOAD 's3://nd-cse40822/employee/departments.csv' USING PigStorage(',') as (dept_no: int, dept_name: chararray);
+
+manager = LOAD 's3://nd-cse40822/employee/dept_manager.csv' USING PigStorage(',') as (dept_no: int, emp_no: int, from_date: chararray, to_date: chararray);
+
+research = FILTER dept BY dept_name == 'Research';
+
+research_mgr = JOIN research BY dept_no, manager BY dept_no;
+
+result = FOREACH research_mgr GENERATE manager::emp_no as empl_no:chararray, manager::from_date, manager::to_date;
+
+dump result;
+--STORE result INTO 's3://awu3-cse40822-a4/prob1/output.1.1';
+
+
+gives following error:
+ WARN  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Encountered Warning FIELD_DISCARDED_TYPE_CONVERSION_FAILED 33 time(s).
