@@ -1,0 +1,33 @@
+--query.1.3 / output.1.3 - List the first_name, birth_date and hire_date of
+--all pairs of employees who share the same birth_date and hire_date, with
+--no duplicates. For example,
+--"John 1970-07-20 1999-11-04 Mike 1970-07-20 1999-11-04".
+
+employees = load 's3://nd-cse40822/employee/employees.csv' USING PigStorage(',') as (emp_no: chararray, birth_date: chararray, first_name: chararray, last_name: chararray, gender: chararray, hire_date: chararray);
+
+min_emp = foreach employees generate first_name,birth_date,hire_date;
+
+emp_group = group min_emp by (birth_date,hire_date);
+
+counted = foreach emp_group generate group,COUNT(min_emp) as cnt;
+
+counted_filt = filter counted by cnt>1;
+
+
+//this may work
+//cross with itself and then filter for unique pairs:
+emp4 = FOREACH emp3 {
+    p1 = FOREACH emp_orig GENERATE emp_no as emp_no1, first_name as first_name1, birth_date as birth_date1, hire_date as hire_date1;
+    p2 = FOREACH emp_orig GENERATE emp_no as emp_no2, first_name as first_name2, birth_date as birth_date2, hire_date as hire_date2;
+    crossed = CROSS p1, p2;
+    theta = FILTER crossed BY emp_no1 != emp_no2 AND first_name1 < first_name2;
+    GENERATE FLATTEN(theta);
+}
+
+you first group by (birth_date, hire_date)
+then count the number of entries in each group
+filter out all the groups with less than 2 entries
+then you do FOREACH on the result
+And then in the FOREACH bracket you CROSS all the entries with themselves
+And filter the “crossed” result to get unique pairs
+and then GENERATE them
